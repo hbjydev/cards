@@ -40,7 +40,7 @@ func GetAll(fields string) ([]User, error) {
 	return users, nil
 }
 
-// TODO implement single read
+// TODO implement single reading
 
 // Create inserts a new user into the database.
 func Create(username string) (*User, error) {
@@ -69,6 +69,6 @@ func Create(username string) (*User, error) {
 	return &newUser, nil
 }
 
-// TODO implement update
+// TODO implement updating
 
-// TODO implement delete
+// TODO implement deleting
