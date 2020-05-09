@@ -1,6 +1,8 @@
 package users
 
-import "github.com/itshaydendev/cards/internal"
+import (
+	"github.com/itshaydendev/cards/internal"
+)
 
 // User represents a user of the service
 type User struct {
@@ -27,7 +29,7 @@ func GetAll(fields string) ([]User, error) {
 	defer rows.Close()
 	for rows.Next() {
 		user := User{}
-		rows.Scan(&user)
+		rows.Scan(&user.ID, &user.Username)
 		users = append(users, user)
 	}
 	err = rows.Err()
@@ -37,3 +39,36 @@ func GetAll(fields string) ([]User, error) {
 
 	return users, nil
 }
+
+// TODO implement single read
+
+// Create inserts a new user into the database.
+func Create(username string) (*User, error) {
+	db, err := internal.Database()
+
+	if err != nil {
+		return nil, err
+	}
+
+	user := db.QueryRow(`
+		INSERT INTO users (
+			username
+		) VALUES (
+			$1
+		) RETURNING id, username
+	`, username)
+
+	newUser := User{}
+
+	err = user.Scan(&newUser.ID, &newUser.Username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &newUser, nil
+}
+
+// TODO implement update
+
+// TODO implement delete

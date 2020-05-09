@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/itshaydendev/cards/internal"
-	"github.com/itshaydendev/cards/internal/users"
+	"github.com/itshaydendev/cards/internal/api/routes"
 	"github.com/itshaydendev/cards/pkg/logger"
 )
 
@@ -33,7 +32,8 @@ func StartServer() {
 
 	r.HandleFunc("/", rootHandler)
 
-	r.HandleFunc("/users", allUsersHandler)
+	r.HandleFunc("/users", routes.AllUsers).Methods("GET")
+	r.HandleFunc("/users", routes.NewUser).Methods("POST")
 
 	logger.Info("Server starting on *:3000")
 
@@ -42,19 +42,4 @@ func StartServer() {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello world!")
-}
-
-func allUsersHandler(w http.ResponseWriter, r *http.Request) {
-	all, err := users.GetAll("*")
-	if err != nil {
-		logger.Error("Cards encountered an error on the /users endpoint.")
-		logger.Error(err.Error())
-		fmt.Fprintf(w, "Something went wrong, please try again later.")
-		return
-	}
-
-	res, err := json.Marshal(all)
-
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, string(res))
 }
