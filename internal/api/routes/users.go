@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/itshaydendev/cards/internal/users"
 	"github.com/itshaydendev/cards/pkg/logger"
 )
@@ -23,6 +24,32 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 		Data: all,
 	}
 	data.Message = "Found " + string(len(all)) + " users."
+
+	res, _ := json.Marshal(data)
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(res))
+}
+
+// GetUser returns one user in the database
+func GetUser(w http.ResponseWriter, r *http.Request) {
+  vars := mux.Vars(r)
+	user, err := users.GetOne(vars["username"])
+	if err != nil {
+		logger.Error("Cards encountered an error on the /users endpoint.")
+		logger.Error(err.Error())
+		fmt.Fprintf(w, "Something went wrong, please try again later.")
+		return
+	}
+
+  if user == nil {
+    // TODO handle if no user found
+  }
+
+	data := getUserResponse{
+		Data: user,
+	}
+	data.Message = "Found the user " + user.Username + "."
 
 	res, _ := json.Marshal(data)
 

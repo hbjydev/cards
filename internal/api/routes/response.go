@@ -12,6 +12,11 @@ type allUsersResponse struct {
 	Data []users.User `json:"data"`
 }
 
+type getUserResponse struct {
+  baseResponse
+  Data *users.User `json:"data"`
+}
+
 type newUserResponse struct {
 	baseResponse
 	Data users.User `json:"data"`

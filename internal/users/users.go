@@ -40,7 +40,27 @@ func GetAll(fields string) ([]User, error) {
 	return users, nil
 }
 
-// TODO implement single reading
+// GetOne finds and returns a user from the database by username
+func GetOne(username string) (*User, error) {
+  db, err := internal.Database()
+
+  if err != nil {
+    return nil, err
+  }
+
+  row := db.QueryRow("SELECT * FROM users WHERE username = $1 LIMIT 1", username)
+  
+  user := User{}
+
+  err = row.Scan(&user.ID, &user.Username)
+
+  if err != nil {
+    return nil, err
+  }
+
+  return &user, nil
+  
+}
 
 // Create inserts a new user into the database.
 func Create(username string) (*User, error) {
