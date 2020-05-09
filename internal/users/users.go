@@ -4,6 +4,7 @@ import "github.com/itshaydendev/cards/internal"
 
 // User represents a user of the service
 type User struct {
+	ID       int    `json:"id"`
 	Username string `json:"username"`
 }
 
