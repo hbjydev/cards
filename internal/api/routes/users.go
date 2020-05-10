@@ -23,7 +23,7 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 	data := allUsersResponse{
 		Data: all,
 	}
-	data.Message = "Found " + string(len(all)) + " users."
+	data.Message = fmt.Sprintf("Found %v users.", len(all))
 
 	res, _ := json.Marshal(data)
 
@@ -33,7 +33,7 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 
 // GetUser returns one user in the database
 func GetUser(w http.ResponseWriter, r *http.Request) {
-  vars := mux.Vars(r)
+	vars := mux.Vars(r)
 	user, err := users.GetOne(vars["username"])
 	if err != nil {
 		logger.Error("Cards encountered an error on the /users endpoint.")
@@ -42,9 +42,9 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-  if user == nil {
-    // TODO handle if no user found
-  }
+	if user == nil {
+		// TODO handle if no user found
+	}
 
 	data := getUserResponse{
 		Data: user,
